@@ -1,4 +1,8 @@
 #!/bin/bash
+#
+# Copyright (C) 2004-2012 Repos Mjukvara AB
+#
+
 
 mkdir -p gen
 pushd gen
