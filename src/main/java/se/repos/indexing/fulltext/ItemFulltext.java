@@ -11,6 +11,7 @@ import org.apache.tika.metadata.Metadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import se.repos.indexing.IndexingDoc;
 import se.repos.indexing.item.IndexingItemHandler;
 import se.repos.indexing.item.IndexingItemProgress;
 import se.repos.indexing.item.ItemPathinfo;
@@ -24,12 +25,22 @@ public class ItemFulltext implements IndexingItemHandler {
 	public void handle(IndexingItemProgress progress) {
 		
 		CmsChangesetItem item = progress.getItem();
+		
 		if (item.isFolder()) {
-			logger.debug("Skipping folder {}", item);
+			logger.trace("Skipping folder {}", item);
 			return;
 		}
 		
-		useTika(progress.getContents());
+		if (item.isDelete()) {
+			logger.trace("Skipping deleted {}", item);
+			return;
+		}
+
+		// TODO use tika-xmp instead?
+		// TODO pre-load metadata with for example explicit content type from svn prop
+		Metadata metadata = new Metadata();		
+		
+		useTika(progress.getContents(), metadata, progress.getFields());
 
 	}
 
@@ -41,11 +52,8 @@ public class ItemFulltext implements IndexingItemHandler {
 		}};
 	}
 	
-	public void useTika(InputStream content) {
+	public void useTika(InputStream content, Metadata metadata, IndexingDoc indexingDoc) {
 		Tika tika = new Tika();
-		
-		// TODO use tika-xmp instead
-		Metadata metadata = new Metadata();
 		
 		String text;
 		
@@ -57,20 +65,19 @@ public class ItemFulltext implements IndexingItemHandler {
 			throw new RuntimeException("not handled", e);
 		}
 		
+		indexingDoc.setField("text", text);
+		
 		for (String n : metadata.names()) {
-			System.out.print(n + ": ");
 			if (metadata.isMultiValued(n)) {
-				System.out.println("̣");
+				StringBuffer concat = new StringBuffer();
 				for (String v : metadata.getValues(n)) {
-					System.out.println("\t" + v);
+					concat.append("', '" + v);
 				}
+				logger.debug("Ignored '{}' = {}", n, concat.substring(3));
 			} else {
-				System.out.println(metadata.get(n));
-				
+				logger.debug("Ignored '{}' = '{}'", n, metadata.get(n));
 			}
 		}		
-		
-		System.out.println(text);
 	}
 
 }

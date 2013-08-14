@@ -20,6 +20,13 @@ import se.repos.indexing.testing.svn.SvnTestIndexing;
 import se.simonsoft.cms.testing.svn.CmsTestRepository;
 import se.simonsoft.cms.testing.svn.SvnTestSetup;
 
+/**
+ * Test queries on files in an actual test repository.
+ * 
+ * This should just test that the combination of repository and indexing works,
+ * for details on extraction and querying use instead
+ * {@link ItemFulltextExtractionTest} and {@link ItemFulltextQueryTest}.
+ */
 public class ItemFulltextIntegrationTest {
 
 	
