@@ -15,8 +15,8 @@ import org.tmatesoft.svn.core.wc2.SvnImport;
 import org.tmatesoft.svn.core.wc2.SvnOperationFactory;
 import org.tmatesoft.svn.core.wc2.SvnTarget;
 
-import se.repos.indexing.testing.TestIndexOptions;
-import se.repos.indexing.testing.svn.SvnTestIndexing;
+import se.repos.testing.indexing.TestIndexOptions;
+import se.repos.testing.indexing.svn.SvnTestIndexing;
 import se.simonsoft.cms.testing.svn.CmsTestRepository;
 import se.simonsoft.cms.testing.svn.SvnTestSetup;
 

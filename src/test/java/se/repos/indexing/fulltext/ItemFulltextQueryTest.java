@@ -9,8 +9,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import se.repos.indexing.testing.TestIndexOptions;
-import se.repos.indexing.testing.svn.SvnTestIndexing;
+import se.repos.testing.indexing.TestIndexOptions;
+import se.repos.testing.indexing.svn.SvnTestIndexing;
 
 /**
  * Tests field rules such as analysis and copy fields, with actual solr queries.
