@@ -8,6 +8,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import se.repos.indexing.item.IndexingItemProgress;
+import se.repos.indexing.item.IndexingItemStandalone;
 
 /**
  * Tests what we can get out of various file formats by asserting on an index document, no actual use of Solr.
