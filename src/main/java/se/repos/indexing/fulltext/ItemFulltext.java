@@ -18,6 +18,8 @@ import se.repos.indexing.IndexingDoc;
 import se.repos.indexing.item.IndexingItemHandler;
 import se.repos.indexing.item.IndexingItemProgress;
 import se.repos.indexing.item.ItemPathinfo;
+import se.simonsoft.cms.item.CmsRepository;
+import se.simonsoft.cms.item.RepoRevision;
 import se.simonsoft.cms.item.events.change.CmsChangesetItem;
 
 public class ItemFulltext implements IndexingItemHandler {
@@ -82,5 +84,13 @@ public class ItemFulltext implements IndexingItemHandler {
 			}
 		}		
 	}
+	
+	@Override
+	public void onRevisionBegin(CmsRepository repository, RepoRevision revision) {
+	}
+
+	@Override
+	public void onRevisionEnd(CmsRepository repository, RepoRevision revision) {
+	}	
 
 }
