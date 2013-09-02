@@ -14,6 +14,7 @@ import org.apache.tika.metadata.Metadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import se.repos.indexing.CoreCommit;
 import se.repos.indexing.IndexingDoc;
 import se.repos.indexing.item.IndexingItemHandler;
 import se.repos.indexing.item.IndexingItemProgress;
@@ -55,6 +56,11 @@ public class ItemFulltext implements IndexingItemHandler {
 		return new HashSet<Class<? extends IndexingItemHandler>>() {{
 			this.add(ItemPathinfo.class);
 		}};
+	}
+	
+	@Override
+	public CoreCommit getCommit() {
+		return null;
 	}
 	
 	public void useTika(InputStream content, Metadata metadata, IndexingDoc indexingDoc) {
