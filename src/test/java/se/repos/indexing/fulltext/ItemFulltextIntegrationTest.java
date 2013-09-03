@@ -57,7 +57,7 @@ public class ItemFulltextIntegrationTest {
 		imp.run();
 		
 		QueryResponse all = solr.query(new SolrQuery("*:*"));
-		assertEquals("Should have indexed all v1 documents", 80, all.getResults().getNumFound());
+		assertEquals("Should have indexed all v1 documents (30), folders (9) and revisions (2)", 30 + 9 + 2, all.getResults().getNumFound());
 		
 		fail("Not yet implemented");
 	}
