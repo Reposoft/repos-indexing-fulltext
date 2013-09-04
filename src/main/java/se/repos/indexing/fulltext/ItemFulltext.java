@@ -11,6 +11,7 @@ import java.util.Set;
 import org.apache.tika.Tika;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
+import org.apache.tika.xmp.XMPMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +42,8 @@ public class ItemFulltext implements IndexingItemHandler {
 
 		// TODO use tika-xmp instead?
 		// TODO pre-load metadata with for example explicit content type from svn prop
-		Metadata metadata = new Metadata();		
+		Metadata metadata = new Metadata();
+		//XMPMetadata metadata = new XMPMetadata();
 		
 		useTika(progress.getContents(), metadata, progress.getFields());
 
@@ -71,14 +73,17 @@ public class ItemFulltext implements IndexingItemHandler {
 		indexingDoc.setField("text", text);
 		
 		for (String n : metadata.names()) {
+			String fieldname = "embd_" + n.replace(' ', '_');
+			if (n.indexOf(' ') >= 0) {
+				logger.debug("Whitespace in metadata name, '{}' becomes {}", n, fieldname);
+			}
 			if (metadata.isMultiValued(n)) {
 				StringBuffer concat = new StringBuffer();
 				for (String v : metadata.getValues(n)) {
-					concat.append("', '" + v);
+					indexingDoc.addField(fieldname, v);
 				}
-				logger.debug("Ignored '{}' = {}", n, concat.substring(3));
 			} else {
-				logger.debug("Ignored '{}' = '{}'", n, metadata.get(n));
+				indexingDoc.addField(fieldname, metadata.get(n));
 			}
 		}		
 	}

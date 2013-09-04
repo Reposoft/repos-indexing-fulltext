@@ -11,6 +11,7 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.common.SolrDocument;
 import org.junit.After;
 import org.junit.Test;
 import org.tmatesoft.svn.core.SVNException;
@@ -36,9 +37,12 @@ public class ItemFulltextIntegrationTest {
 	@After
 	public void tearDown() {
 		SvnTestSetup.getInstance().tearDown();
-		SvnTestIndexing.getInstance().tearDown(); // TODO make static and set up + tear down only once?
+		SvnTestIndexing.getInstance().tearDown();
 	}
 	
+	/**
+	 * Test the index of the structure in Repos Search 1 test sets.
+	 */
 	@Test
 	public void testHandleSearch1Docs() throws SVNException, SolrServerException {
 		ItemFulltext handler = new ItemFulltext();
@@ -59,7 +63,14 @@ public class ItemFulltextIntegrationTest {
 		QueryResponse all = solr.query(new SolrQuery("*:*"));
 		assertEquals("Should have indexed all v1 documents (30), folders (9) and revisions (2)", 30 + 9 + 2, all.getResults().getNumFound());
 		
-		fail("Not yet implemented");
+		QueryResponse pdf = solr.query(new SolrQuery("pathext:pdf"));
+		assertEquals(1, pdf.getResults().getNumFound());
+		SolrDocument shortpdf = pdf.getResults().get(0);
+		assertEquals("keywordinsaveaspdf someotherkeyword", shortpdf.getFieldValues("embd_dc:subject").iterator().next());
+		// don't forget to avoid assertions of stuff that belong in the isolated tests, almost everything
+		
+		// TODO see https://wiki.apache.org/tika/MetadataRoadmap
+		// We need typed values, particularily Date support. We might also want to avoid multi-value for most fields.
 	}
 
 }
