@@ -12,7 +12,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import se.repos.testing.indexing.SvnTestIndexing;
+import se.repos.testing.indexing.ReposTestIndexing;
 import se.repos.testing.indexing.TestIndexOptions;
 
 /**
@@ -23,14 +23,14 @@ import se.repos.testing.indexing.TestIndexOptions;
  */
 public class ItemFulltextQueryTest {
 
-	private SvnTestIndexing indexing = null;
+	private ReposTestIndexing indexing = null;
 	private SolrServer repositem = null;
 	
 	@Before
 	public void setUp() {
 		// run indexing without handlers or repository
 		TestIndexOptions options = new TestIndexOptions().itemDefaults();
-		indexing = SvnTestIndexing.getInstance(options);
+		indexing = ReposTestIndexing.getInstance(options);
 		repositem = indexing.getCore("repositem");
 	}
 	

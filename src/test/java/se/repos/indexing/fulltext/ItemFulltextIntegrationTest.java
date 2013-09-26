@@ -19,7 +19,7 @@ import org.tmatesoft.svn.core.wc2.SvnImport;
 import org.tmatesoft.svn.core.wc2.SvnOperationFactory;
 import org.tmatesoft.svn.core.wc2.SvnTarget;
 
-import se.repos.testing.indexing.SvnTestIndexing;
+import se.repos.testing.indexing.ReposTestIndexing;
 import se.repos.testing.indexing.TestIndexOptions;
 import se.simonsoft.cms.testing.svn.CmsTestRepository;
 import se.simonsoft.cms.testing.svn.SvnTestSetup;
@@ -37,7 +37,7 @@ public class ItemFulltextIntegrationTest {
 	@After
 	public void tearDown() {
 		SvnTestSetup.getInstance().tearDown();
-		SvnTestIndexing.getInstance().tearDown();
+		ReposTestIndexing.getInstance().tearDown();
 	}
 	
 	/**
@@ -49,7 +49,7 @@ public class ItemFulltextIntegrationTest {
 		TestIndexOptions options = new TestIndexOptions().itemDefaults().addHandler(handler);
 		
 		CmsTestRepository repo = SvnTestSetup.getInstance().getRepository();
-		SolrServer solr = SvnTestIndexing.getInstance(options).enable(repo).getCore("repositem");
+		SolrServer solr = ReposTestIndexing.getInstance(options).enable(repo).getCore("repositem");
 		
 		File docs = new File("src/test/resources/repos-search-v1");
 		assertTrue(docs.isDirectory());
