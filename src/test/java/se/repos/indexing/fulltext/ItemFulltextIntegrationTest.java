@@ -12,6 +12,7 @@ import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
+import org.apache.solr.common.SolrDocumentList;
 import org.junit.After;
 import org.junit.Test;
 import org.tmatesoft.svn.core.SVNException;
@@ -21,6 +22,10 @@ import org.tmatesoft.svn.core.wc2.SvnTarget;
 
 import se.repos.testing.indexing.ReposTestIndexing;
 import se.repos.testing.indexing.TestIndexOptions;
+import se.simonsoft.cms.backend.filexml.CmsRepositoryFilexml;
+import se.simonsoft.cms.backend.filexml.FilexmlRepositoryReadonly;
+import se.simonsoft.cms.backend.filexml.FilexmlSourceClasspath;
+import se.simonsoft.cms.backend.filexml.testing.ReposTestBackendFilexml;
 import se.simonsoft.cms.testing.svn.CmsTestRepository;
 import se.simonsoft.cms.testing.svn.SvnTestSetup;
 
@@ -71,6 +76,21 @@ public class ItemFulltextIntegrationTest {
 		
 		// TODO see https://wiki.apache.org/tika/MetadataRoadmap
 		// We need typed values, particularily Date support. We might also want to avoid multi-value for most fields.
+	}
+	
+	@Test
+	public void testInvalidXml() throws SolrServerException {
+		ItemFulltext handler = new ItemFulltext();
+		TestIndexOptions options = new TestIndexOptions().itemDefaults().addHandler(handler);
+		ReposTestIndexing indexing = ReposTestIndexing.getInstance(options);
+		
+		CmsRepositoryFilexml repo = new CmsRepositoryFilexml("http://host/svn/test",
+				new FilexmlSourceClasspath("se/repos/indexing/fulltext/datasets/tiny-invalidxml"));
+		FilexmlRepositoryReadonly filexml = new FilexmlRepositoryReadonly(repo);
+		SolrServer solr = indexing.enable(new ReposTestBackendFilexml(filexml)).getCore("repositem");
+		
+		SolrDocumentList all = solr.query(new SolrQuery("text_error:\"must be terminated\"")).getResults();
+		assertEquals("should index extraction errors", 1, all.getNumFound());
 	}
 
 }

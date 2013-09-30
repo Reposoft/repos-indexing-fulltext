@@ -5,6 +5,8 @@ package se.repos.indexing.fulltext;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -65,7 +67,11 @@ public class ItemFulltext implements IndexingItemHandler {
 		try {
 			text = tika.parseToString(content, metadata);
 		} catch (TikaException e) {
-			throw new RuntimeException("not handled", e);
+			logger.warn("Content extraction error for {}: {}", indexingDoc.getFieldValue("id"), e.getMessage());
+			StringWriter err = new StringWriter();
+			e.printStackTrace(new PrintWriter(err));
+			indexingDoc.setField("text_error", err.toString());
+			return;
 		} catch (IOException e) {
 			throw new RuntimeException("not handled", e);
 		}
