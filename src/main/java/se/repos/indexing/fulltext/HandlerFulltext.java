@@ -18,13 +18,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import se.repos.indexing.IndexingDoc;
-import se.repos.indexing.item.IndexingItemHandler;
+import se.repos.indexing.IndexingItemHandler;
 import se.repos.indexing.item.IndexingItemProgress;
 import se.repos.indexing.item.HandlerPathinfo;
 import se.simonsoft.cms.item.events.change.CmsChangesetItem;
 
 public class HandlerFulltext implements IndexingItemHandler {
 
+	/**
+	 * To avoid multivalue fields for all metadata in Solr we concatenate with newline, and tokenize on that at indexing.
+	 */
+	private static final String METADATA_MULTIVALUE_SEPARATOR = "\n";
+	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Override
@@ -86,8 +91,9 @@ public class HandlerFulltext implements IndexingItemHandler {
 			if (metadata.isMultiValued(n)) {
 				StringBuffer concat = new StringBuffer();
 				for (String v : metadata.getValues(n)) {
-					indexingDoc.addField(fieldname, v);
+					concat.append(METADATA_MULTIVALUE_SEPARATOR).append(v);
 				}
+				indexingDoc.addField(fieldname, concat.substring(1));
 			} else {
 				indexingDoc.addField(fieldname, metadata.get(n));
 			}
