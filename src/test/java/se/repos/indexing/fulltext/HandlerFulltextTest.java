@@ -14,7 +14,7 @@ import se.repos.indexing.IndexingDoc;
 import se.repos.indexing.item.IndexingItemProgress;
 import se.simonsoft.cms.item.events.change.CmsChangesetItem;
 
-public class ItemFulltextTest {
+public class HandlerFulltextTest {
 
 	@Test
 	public void testHandleFolder() {
@@ -23,7 +23,7 @@ public class ItemFulltextTest {
 		when(p.getItem()).thenReturn(item);
 		when(item.isFolder()).thenReturn(true);
 		
-		ItemFulltext handler = new ItemFulltext();
+		HandlerFulltext handler = new HandlerFulltext();
 		handler.handle(p);
 		
 		// sholdnt even ask for fields
@@ -36,7 +36,7 @@ public class ItemFulltextTest {
 		when(p.getItem()).thenReturn(item);
 		when(item.isDelete()).thenReturn(true);
 		
-		ItemFulltext handler = new ItemFulltext();
+		HandlerFulltext handler = new HandlerFulltext();
 		handler.handle(p);
 		
 		// sholdnt even ask for fields
@@ -51,7 +51,7 @@ public class ItemFulltextTest {
 		IndexingDoc doc = mock(IndexingDoc.class);
 		when(p.getFields()).thenReturn(doc);
 		
-		ItemFulltext handler = new ItemFulltext();
+		HandlerFulltext handler = new HandlerFulltext();
 		handler.handle(p);
 		verify(doc).setField("text", "textfile\n\n");
 	}

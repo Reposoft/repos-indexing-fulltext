@@ -20,10 +20,10 @@ import org.slf4j.LoggerFactory;
 import se.repos.indexing.IndexingDoc;
 import se.repos.indexing.item.IndexingItemHandler;
 import se.repos.indexing.item.IndexingItemProgress;
-import se.repos.indexing.item.ItemPathinfo;
+import se.repos.indexing.item.HandlerPathinfo;
 import se.simonsoft.cms.item.events.change.CmsChangesetItem;
 
-public class ItemFulltext implements IndexingItemHandler {
+public class HandlerFulltext implements IndexingItemHandler {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
@@ -55,7 +55,7 @@ public class ItemFulltext implements IndexingItemHandler {
 	@Override
 	public Set<Class<? extends IndexingItemHandler>> getDependencies() {
 		return new HashSet<Class<? extends IndexingItemHandler>>() {{
-			this.add(ItemPathinfo.class);
+			this.add(HandlerPathinfo.class);
 		}};
 	}
 	

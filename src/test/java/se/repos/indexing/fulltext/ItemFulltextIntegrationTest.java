@@ -50,7 +50,7 @@ public class ItemFulltextIntegrationTest {
 	 */
 	@Test
 	public void testHandleSearch1Docs() throws SVNException, SolrServerException {
-		ItemFulltext handler = new ItemFulltext();
+		HandlerFulltext handler = new HandlerFulltext();
 		TestIndexOptions options = new TestIndexOptions().itemDefaults().addHandler(handler);
 		
 		CmsTestRepository repo = SvnTestSetup.getInstance().getRepository();
@@ -80,7 +80,7 @@ public class ItemFulltextIntegrationTest {
 	
 	@Test
 	public void testInvalidXml() throws SolrServerException {
-		ItemFulltext handler = new ItemFulltext();
+		HandlerFulltext handler = new HandlerFulltext();
 		TestIndexOptions options = new TestIndexOptions().itemDefaults().addHandler(handler);
 		ReposTestIndexing indexing = ReposTestIndexing.getInstance(options);
 		

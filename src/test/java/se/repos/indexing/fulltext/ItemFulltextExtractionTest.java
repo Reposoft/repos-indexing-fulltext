@@ -17,7 +17,7 @@ public class ItemFulltextExtractionTest {
 
 	@Test
 	public void test() {
-		ItemFulltext fulltext = new ItemFulltext();
+		HandlerFulltext fulltext = new HandlerFulltext();
 		
 		IndexingItemProgress item = new IndexingItemStandalone("repos-search-v1/docs/Excel format.xls");
 		fulltext.handle(item);
