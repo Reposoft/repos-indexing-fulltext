@@ -3,7 +3,6 @@
  */
 package se.repos.indexing.fulltext;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.io.ByteArrayInputStream;
@@ -26,7 +25,7 @@ public class HandlerFulltextTest {
 		HandlerFulltext handler = new HandlerFulltext();
 		handler.handle(p);
 		
-		// sholdnt even ask for fields
+		// shouldn't even ask for fields
 	}
 
 	@Test
@@ -39,7 +38,7 @@ public class HandlerFulltextTest {
 		HandlerFulltext handler = new HandlerFulltext();
 		handler.handle(p);
 		
-		// sholdnt even ask for fields
+		// shouldn't even ask for fields
 	}
 	
 	@Test
