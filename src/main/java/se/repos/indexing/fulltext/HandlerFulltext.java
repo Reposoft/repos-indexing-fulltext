@@ -111,10 +111,10 @@ public class HandlerFulltext implements IndexingItemHandler {
 			for (String n: this.xmpFields) {
 				String[] values = xmpMetadata.getValues(n);
 				if (values != null && values[0] != null) {
-					logger.debug("XMP field {} exists.", n);
+					logger.debug("XMP in {} -  field {} exists ({}).", indexingDoc.getFieldValue("id"), n, values.length);
 					this.addField("xmp_", n, metadata, indexingDoc);
 				} else {
-					logger.debug("XMP field {} does NOT exist.", n);
+					logger.debug("XMP in {} -  field {} does NOT exist.", indexingDoc.getFieldValue("id"), n);
 					//System.out.println("XMP field " + n + " does NOT exist.");
 				}
 				
