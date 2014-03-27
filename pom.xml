@@ -53,7 +53,7 @@
 		<dependency>
 			<groupId>se.repos</groupId>
 			<artifactId>repos-testing</artifactId>
-			<version>0.6</version>
+			<version>0.7.5</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
