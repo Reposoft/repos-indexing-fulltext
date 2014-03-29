@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,6 +16,7 @@ import org.apache.tika.metadata.Metadata;
 import org.apache.tika.xmp.XMPMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.helpers.MessageFormatter;
 
 import se.repos.indexing.IndexingDoc;
 import se.repos.indexing.IndexingItemHandler;
@@ -24,15 +24,16 @@ import se.repos.indexing.item.HandlerPathinfo;
 import se.repos.indexing.item.IndexingItemProgress;
 import se.simonsoft.cms.item.events.change.CmsChangesetItem;
 
+import com.adobe.xmp.XMPIterator;
+import com.adobe.xmp.options.PropertyOptions;
+import com.adobe.xmp.properties.XMPPropertyInfo;
+
 public class HandlerFulltext implements IndexingItemHandler {
 
 	/**
 	 * To avoid multivalue fields for all metadata in Solr we concatenate with newline, and tokenize on that at indexing.
 	 */
 	private static final String METADATA_MULTIVALUE_SEPARATOR = "\n";
-	
-	private String[] XMP_FIELDS_DEFAULT = {"dc:description", "dc:subject", "dc:title", "cp:revision", "tiff:Orientation"};
-	private Set<String> xmpFields = new HashSet<String>(Arrays.asList(XMP_FIELDS_DEFAULT));
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
@@ -94,30 +95,55 @@ public class HandlerFulltext implements IndexingItemHandler {
 		// Extract the metadata after mapping to XMP.
 		try {
 			XMPMetadata xmpMetadata = new org.apache.tika.xmp.XMPMetadata(metadata);
-
-			// Can be used for deeper examination of XMP tree. Complex stuff.
-			/*
+			Set<String> xmpFields = new HashSet<String>();
+			
+			// First determine a set of XMP keys defined in this file.
 			XMPIterator it = xmpMetadata.getXMPData().iterator();
 			while (it.hasNext()) { 
 				XMPPropertyInfo xmp = (XMPPropertyInfo) it.next();
 				// https://code.google.com/p/metadata-extractor/source/browse/Libraries/XMPCore/src/com/adobe/xmp/options/PropertyOptions.java
 				PropertyOptions xmpOptions = xmp.getOptions();
+				String xmpPath = xmp.getPath();
 				
-				System.out.println(xmp.getPath());
-				logger.trace("XMP node: {} ({}): {}", xmp.getPath(), xmpOptions.getOptionsString(), xmp.getValue());
-			}
-			*/
+				String msg = MessageFormatter.format("XMP node: {} ({}): " + xmp.getValue(), xmpPath, xmpOptions.getOptionsString()).getMessage();
+				logger.trace(msg);
+				//System.out.println(msg);
 				
-			for (String n: this.xmpFields) {
-				String[] values = xmpMetadata.getValues(n);
-				if (values != null && values[0] != null) {
-					logger.debug("XMP in {} -  field {} exists ({}).", indexingDoc.getFieldValue("id"), n, values.length);
-					this.addField("xmp_", n, metadata, indexingDoc);
-				} else {
-					logger.debug("XMP in {} -  field {} does NOT exist.", indexingDoc.getFieldValue("id"), n);
-					//System.out.println("XMP field " + n + " does NOT exist.");
+				
+				if (xmpPath != null && !xmpPath.isEmpty()) {
+					//System.out.println(msg);
+					// Unfortunately, it.skipSubtree() does not work as documented.
+					boolean isDeep = (xmpPath.contains("/") | xmpPath.contains("["));
+					if (isDeep) {
+						logger.debug("Skipping XMP node {} on {}", xmpPath, indexingDoc.getFieldValue("id"));
+					} else {
+						xmpFields.add(xmpPath);
+					}
+				} 
+				// Going deep can give keys like "dc:title[1]/xml:lang" which fails getValues(..)
+				// This call does not work properly, need to examine xmpPath for '/' or '[' above.
+				/*
+				if ((xmpOptions.getOptions() & PropertyOptions.ARRAY) != 0) {
+					it.skipSubtree();
+					//System.out.println("Skipping subtree");
 				}
+				*/
+			}
 				
+			for (String n : xmpFields) {
+				try {
+					String[] values = xmpMetadata.getValues(n);
+					if (values != null && values[0] != null) {
+						logger.debug("XMP in {} -  field {} exists ({}).", indexingDoc.getFieldValue("id"), n, values.length);
+						this.addField("xmp_", n, metadata, indexingDoc);
+					} else {
+						logger.warn("XMP in {} -  field {} does NOT exist.", indexingDoc.getFieldValue("id"), n);
+						//System.out.println("XMP field " + n + " does NOT exist.");
+					}
+				} catch (Exception e) {
+					logger.warn("XMP extraction error field {} on {}: {}", n, indexingDoc.getFieldValue("id"), e.getMessage());
+				}
+
 			}
 			
 		} catch (Exception e) {
