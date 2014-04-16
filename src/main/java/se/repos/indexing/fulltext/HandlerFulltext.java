@@ -37,6 +37,13 @@ public class HandlerFulltext implements IndexingItemHandler {
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
+	/**
+	 * Because we depend on field updates (the "head" flag) for historical items in incremental indexing,
+	 * and because text is stored="false" (see http://wiki.apache.org/solr/Atomic_Updates#Stored_Values),
+	 * we should for consistency skip text at reindex where no field update is done.
+	 */
+	private boolean skipTextForHistorical = true;	
+	
 	@Override
 	public void handle(IndexingItemProgress progress) {
 		
@@ -85,7 +92,11 @@ public class HandlerFulltext implements IndexingItemHandler {
 			throw new RuntimeException("not handled", e);
 		}
 		
-		indexingDoc.setField("text", text);
+		if (skipTextForHistorical && indexingDoc.containsKey("head") && indexingDoc.getFieldValue("head").equals(false)) {
+			logger.debug("Skipping text field for item {} known to be historical", indexingDoc.getFieldValue("id"));
+		} else {
+			indexingDoc.setField("text", text);
+		}
 
 		// Extract the classic embedded metadata.
 		for (String n : metadata.names()) {
