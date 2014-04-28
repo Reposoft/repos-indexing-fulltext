@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	
 	<artifactId>repos-indexing-fulltext</artifactId>
-	<version>0.8.2-SNAPSHOT</version>
+	<version>0.8.2</version>
 	<packaging>jar</packaging>
 	
 	<name>Repos Indexing - Fulltext</name>
@@ -38,7 +38,7 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>repos-indexing</artifactId>
-			<version>0.8.2-SNAPSHOT</version>
+			<version>0.8.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tika</groupId>
@@ -53,13 +53,13 @@
 		<dependency>
 			<groupId>se.repos</groupId>
 			<artifactId>repos-testing</artifactId>
-			<version>0.7.5</version>
+			<version>0.8.2</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>se.simonsoft</groupId>
 			<artifactId>cms-backend-filexml</artifactId>
-			<version>0.6</version>
+			<version>0.6.7</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
