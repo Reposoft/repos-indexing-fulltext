@@ -86,7 +86,7 @@ public class HandlerFulltext implements IndexingItemHandler {
 			logger.warn("Content extraction error for {}: {}", indexingDoc.getFieldValue("id"), e.getMessage());
 			StringWriter err = new StringWriter();
 			e.printStackTrace(new PrintWriter(err));
-			indexingDoc.setField("text_error", err.toString());
+			indexingDoc.addField("text_error", err.toString());
 			return;
 		} catch (IOException e) {
 			throw new RuntimeException("not handled", e);
@@ -161,7 +161,7 @@ public class HandlerFulltext implements IndexingItemHandler {
 			logger.warn("XMP extraction error for {}: {}", indexingDoc.getFieldValue("id"), e.getMessage());
 			StringWriter err = new StringWriter();
 			e.printStackTrace(new PrintWriter(err));
-			indexingDoc.setField("text_error", err.toString());
+			indexingDoc.addField("text_error", err.toString());
 			return;
 		}
 	}
