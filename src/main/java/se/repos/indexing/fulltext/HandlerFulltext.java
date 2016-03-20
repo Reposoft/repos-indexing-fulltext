@@ -88,9 +88,9 @@ public class HandlerFulltext implements IndexingItemHandler {
 			e.printStackTrace(new PrintWriter(err));
 			indexingDoc.addField("text_error", err.toString());
 			return;
-		} catch (NoSuchMethodError e) {
+		} catch (LinkageError e) {
 			// Likely incompatibility btw Tika and IBM JVM when parsing MS Office files.
-			logger.error("Content extraction error for {}: {}", indexingDoc.getFieldValue("id"), e.getMessage());
+			logger.error("Content extraction error (JVM incompatible) for {}: {}", indexingDoc.getFieldValue("id"), e.getMessage());
 			StringWriter err = new StringWriter();
 			e.printStackTrace(new PrintWriter(err));
 			indexingDoc.addField("text_error", err.toString());
