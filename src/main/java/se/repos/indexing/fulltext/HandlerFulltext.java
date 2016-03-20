@@ -3,7 +3,6 @@
  */
 package se.repos.indexing.fulltext;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -88,8 +87,13 @@ public class HandlerFulltext implements IndexingItemHandler {
 			e.printStackTrace(new PrintWriter(err));
 			indexingDoc.addField("text_error", err.toString());
 			return;
-		} catch (IOException e) {
-			throw new RuntimeException("not handled", e);
+		} catch (Exception e) {
+			// Have to take a more forgiving approach since we are seeing fatal issues when running in IBM JVM.
+			logger.error("Content extraction error for {}: {}", indexingDoc.getFieldValue("id"), e.getMessage());
+			StringWriter err = new StringWriter();
+			e.printStackTrace(new PrintWriter(err));
+			indexingDoc.addField("text_error", err.toString());
+			return;
 		}
 		
 		if (skipTextForHistorical && indexingDoc.containsKey("head") && indexingDoc.getFieldValue("head").equals(false)) {
