@@ -38,7 +38,7 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>repos-indexing</artifactId>
-			<version>0.12.1</version>
+			<version>0.12.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tika</groupId>
