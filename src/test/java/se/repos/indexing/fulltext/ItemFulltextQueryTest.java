@@ -48,7 +48,7 @@ public class ItemFulltextQueryTest {
 	public void testTextSimple() throws Exception {
 		SolrInputDocument d = new SolrInputDocument();
 		d.setField("id", "1");
-		d.setField("text", "A reasonably Short text with a ProductName and car model 93X or maybe 9-3X");
+		d.setField("text", "A reasonably Short text with a ProductName and car model 93X or maybe 9-5X");
 		repositem.add(d);
 		SolrInputDocument e = new SolrInputDocument();
 		e.setField("id", "dontmatch");
@@ -62,8 +62,13 @@ public class ItemFulltextQueryTest {
 				repositem.query(new SolrQuery("text:shorT")).getResults().getNumFound());
 		assertEquals("Should match multiple words", 1,
 				repositem.query(new SolrQuery("text:\"car model\"")).getResults().getNumFound());
+		// Default config no longer splits camel case.
+		/*
 		assertEquals("Should split camel case, such as product names", 1,
 				repositem.query(new SolrQuery("text:\"Product Name\"")).getResults().getNumFound());
+		*/
+		assertEquals("Should match product name with mixed alpha and numerics", 1,
+				repositem.query(new SolrQuery("text:93X")).getResults().getNumFound());
 	}
 	
 	
