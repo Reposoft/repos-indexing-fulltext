@@ -16,6 +16,7 @@ import org.apache.solr.common.SolrDocumentList;
 import org.junit.After;
 import org.junit.Test;
 import org.tmatesoft.svn.core.SVNException;
+import org.tmatesoft.svn.core.wc.ISVNFileFilter;
 import org.tmatesoft.svn.core.wc2.SvnImport;
 import org.tmatesoft.svn.core.wc2.SvnOperationFactory;
 import org.tmatesoft.svn.core.wc2.SvnTarget;
@@ -62,6 +63,18 @@ public class ItemFulltextIntegrationTest {
 		SvnOperationFactory svnkitOp = repo.getSvnkitOp();
 		SvnImport imp = svnkitOp.createImport();
 		imp.setSource(docs);
+		imp.setFileFilter(new ISVNFileFilter() {
+			
+			@Override
+			public boolean accept(File file) throws SVNException {
+				
+				//System.out.println("testHandleSearch1Docs - importing: " + file.getName());
+				if (".gitignore".equals(file.getName())) {
+					return false;
+				}
+				return true;
+			}
+		});
 		imp.setSingleTarget(SvnTarget.fromURL(repo.getUrlSvnkit()));
 		imp.run();
 		
