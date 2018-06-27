@@ -95,6 +95,13 @@ public class HandlerFulltext implements IndexingItemHandler {
 			e.printStackTrace(new PrintWriter(err));
 			indexingDoc.addField("text_error", err.toString());
 			return;
+		} catch (OutOfMemoryError e) {
+			// Allow failure to do fulltext extraction when facing large or broken files, noted as text_error in index.
+			logger.error("Content extraction error (Out of Memory) for {}: {}", indexingDoc.getFieldValue("id"), e.getMessage());
+			StringWriter err = new StringWriter();
+			e.printStackTrace(new PrintWriter(err));
+			indexingDoc.addField("text_error", err.toString());
+			return;
 		} catch (Exception e) {
 			// Have to take a more forgiving approach since we are seeing fatal issues when running in IBM JVM.
 			logger.error("Content extraction error for {}: {}", indexingDoc.getFieldValue("id"), e.getMessage());
