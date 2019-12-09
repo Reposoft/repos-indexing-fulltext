@@ -81,7 +81,7 @@ public class HandlerFulltext implements IndexingItemHandler {
 		
 		try {
 			logger.debug("Starting fulltext extraction");
-			text = tika.parseToString(content, metadata);
+			text = tika.parseToString(content, metadata, 500000);
 		} catch (TikaException e) {
 			logger.warn("Content extraction error for {}: {}", indexingDoc.getFieldValue("id"), e.getMessage());
 			StringWriter err = new StringWriter();
