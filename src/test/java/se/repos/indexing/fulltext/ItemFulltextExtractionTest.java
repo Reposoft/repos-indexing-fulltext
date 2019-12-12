@@ -104,7 +104,11 @@ public class ItemFulltextExtractionTest {
 
 		printFields(fields);
 
-		assertEquals("Subject", "keywordinsaveaspdf someotherkeyword", fields.getFieldValue("xmp_dc.subject"));
+		// Seen some note about DC-subject should be both keywords and subject. 
+		assertEquals("Subject", "The PDF subject", fields.getFieldValue("embd_subject"));
+		assertEquals("Keywords", "keywordinsaveaspdf someotherkeyword", fields.getFieldValue("embd_meta.keyword"));
+		// Field "xmp_dc.subject" changed to null from Tika 1.14 to 1.23.
+		//assertEquals("Keywords", "keywordinsaveaspdf someotherkeyword", fields.getFieldValue("xmp_dc.subject"));
 		assertEquals("Title", "PDF Title For Short Document", fields.getFieldValue("xmp_dc.title"));
 		/*
 		 * With generic Metadata:
@@ -154,6 +158,7 @@ public class ItemFulltextExtractionTest {
 
 
 		// For this image, the XMP extraction finds namespaces: dc (2), tiff (10), exif (just 7) 
+		assertEquals("Subject (keywords)", "bird watching\ncoast\nnature reserve\ngrazelands", fields.getFieldValue("embd_subject"));
 		assertEquals("Subject (keywords)", "bird watching\ncoast\nnature reserve\ngrazelands", fields.getFieldValue("xmp_dc.subject"));
 		assertEquals("Description", "Bird site in north eastern Skåne, Sweden.\n(new line)", fields.getFieldValue("xmp_dc.description"));
 		assertEquals("1", fields.getFieldValue("xmp_tiff.Orientation"));
