@@ -84,7 +84,7 @@ public class ItemFulltextIntegrationTest {
 		QueryResponse pdf = solr.query(new SolrQuery("pathext:pdf"));
 		assertEquals(1, pdf.getResults().getNumFound());
 		SolrDocument shortpdf = pdf.getResults().get(0);
-		assertEquals("keywordinsaveaspdf someotherkeyword", shortpdf.getFieldValues("xmp_dc.subject").iterator().next());
+		assertEquals("keywordinsaveaspdf someotherkeyword", shortpdf.getFieldValues("embd_meta.keyword").iterator().next());
 		
 		/* Causes NPE since introducing XMP metadata. Not sure why.
 		assertEquals("keywordinsaveaspdf someotherkeyword", shortpdf.getFieldValues("embd_dc:subject").iterator().next());
