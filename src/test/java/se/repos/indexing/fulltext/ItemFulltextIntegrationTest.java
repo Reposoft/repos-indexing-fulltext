@@ -6,9 +6,10 @@ package se.repos.indexing.fulltext;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrServer;
+import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
@@ -48,14 +49,15 @@ public class ItemFulltextIntegrationTest {
 	
 	/**
 	 * Test the index of the structure in Repos Search 1 test sets.
+	 * @throws IOException 
 	 */
 	@Test
-	public void testHandleSearch1Docs() throws SVNException, SolrServerException {
+	public void testHandleSearch1Docs() throws SVNException, SolrServerException, IOException {
 		HandlerFulltext handler = new HandlerFulltext();
 		TestIndexOptions options = new TestIndexOptions().itemDefaults().addHandler(handler);
 		
 		CmsTestRepository repo = SvnTestSetup.getInstance().getRepository();
-		SolrServer solr = ReposTestIndexing.getInstance(options).enable(repo).getCore("repositem");
+		SolrClient solr = ReposTestIndexing.getInstance(options).enable(repo).getCore("repositem");
 		
 		File docs = new File("src/test/resources/repos-search-v1");
 		assertTrue(docs.isDirectory());
@@ -96,7 +98,7 @@ public class ItemFulltextIntegrationTest {
 	}
 	
 	@Test
-	public void testInvalidXml() throws SolrServerException {
+	public void testInvalidXml() throws SolrServerException, IOException {
 		HandlerFulltext handler = new HandlerFulltext();
 		TestIndexOptions options = new TestIndexOptions().itemDefaults().addHandler(handler);
 		ReposTestIndexing indexing = ReposTestIndexing.getInstance(options);
@@ -104,7 +106,7 @@ public class ItemFulltextIntegrationTest {
 		CmsRepositoryFilexml repo = new CmsRepositoryFilexml("http://host/svn/test",
 				new FilexmlSourceClasspath("se/repos/indexing/fulltext/datasets/tiny-invalidxml"));
 		FilexmlRepositoryReadonly filexml = new FilexmlRepositoryReadonly(repo);
-		SolrServer solr = indexing.enable(new ReposTestBackendFilexml(filexml)).getCore("repositem");
+		SolrClient solr = indexing.enable(new ReposTestBackendFilexml(filexml)).getCore("repositem");
 		
 		SolrDocumentList all = solr.query(new SolrQuery("text_error:\"must be terminated\"")).getResults();
 		assertEquals("should index extraction errors", 1, all.getNumFound());
