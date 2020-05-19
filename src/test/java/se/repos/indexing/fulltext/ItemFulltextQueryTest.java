@@ -6,7 +6,7 @@ package se.repos.indexing.fulltext;
 import static org.junit.Assert.*;
 
 import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrServer;
+import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.common.SolrInputDocument;
 import org.junit.After;
 import org.junit.Before;
@@ -24,7 +24,7 @@ import se.repos.testing.indexing.TestIndexOptions;
 public class ItemFulltextQueryTest {
 
 	private ReposTestIndexing indexing = null;
-	private SolrServer repositem = null;
+	private SolrClient repositem = null;
 	
 	@Before
 	public void setUp() {
