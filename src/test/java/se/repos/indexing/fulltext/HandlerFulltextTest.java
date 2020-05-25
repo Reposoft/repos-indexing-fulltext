@@ -47,6 +47,7 @@ public class HandlerFulltextTest {
 	public void testHandle() {
 		IndexingItemProgress p = mock(IndexingItemProgress.class);
 		CmsChangesetItem item = mock(CmsChangesetItem.class);
+		when(item.getFilesize()).thenReturn(9L);
 		when(p.getItem()).thenReturn(item);
 		when(p.getContents()).thenReturn(new ByteArrayInputStream("textfile\n".getBytes()));
 		IndexingDoc doc = mock(IndexingDoc.class);
