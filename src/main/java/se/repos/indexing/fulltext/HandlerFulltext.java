@@ -58,6 +58,11 @@ public class HandlerFulltext implements IndexingItemHandler {
 			return;
 		}
 
+		if (item.getFilesize() == 0) {
+			logger.trace("Skipping empty file {}", item);
+			return;
+		}
+
 		// Indexing both traditional Metadata and XMPMetadata (tika-xmp).
 		// TODO pre-load metadata with for example explicit content type from svn prop
 		Metadata metadata = new Metadata();

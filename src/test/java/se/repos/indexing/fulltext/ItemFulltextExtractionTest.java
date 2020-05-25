@@ -24,6 +24,20 @@ public class ItemFulltextExtractionTest {
 	}
 
 	@Test
+	public void testEmpty1() {
+		HandlerFulltext fulltext = new HandlerFulltext();
+		
+		IndexingItemProgress item = new IndexingItemStandalone("repos-search-v1/docs/empty.txt");
+		fulltext.handle(item);
+		IndexingDoc fields = item.getFields();
+		
+		assertFalse("Should not flag as error, Tika 1.23 throws specific exception", fields.containsKey("text_error"));
+		// Tika 1.23: org.apache.tika.exception.ZeroByteFileException
+		assertFalse("Text extraction suppressed when empty", fields.containsKey("text"));
+	}
+	
+	
+	@Test
 	public void testExcel1() {
 		HandlerFulltext fulltext = new HandlerFulltext();
 
