@@ -81,9 +81,9 @@ public class ItemFulltextIntegrationTest {
 		imp.run();
 		
 		QueryResponse all = solr.query(new SolrQuery("*:*"));
-		assertEquals("Should have indexed all v1 documents (31), folders (9) and revisions (2)", 31 + 9 + 2, all.getResults().getNumFound());
+		assertEquals("Should have indexed all v1 documents (31), folders (9), history (31+9) and commits (2)", 31 + 9 + (31+9) + 2, all.getResults().getNumFound());
 		
-		QueryResponse pdf = solr.query(new SolrQuery("pathext:pdf"));
+		QueryResponse pdf = solr.query(new SolrQuery("pathext:pdf AND head:true"));
 		assertEquals(1, pdf.getResults().getNumFound());
 		SolrDocument shortpdf = pdf.getResults().get(0);
 		assertEquals("keywordinsaveaspdf someotherkeyword", shortpdf.getFieldValues("embd_meta.keyword").iterator().next());
@@ -108,7 +108,7 @@ public class ItemFulltextIntegrationTest {
 		FilexmlRepositoryReadonly filexml = new FilexmlRepositoryReadonly(repo);
 		SolrClient solr = indexing.enable(new ReposTestBackendFilexml(filexml)).getCore("repositem");
 		
-		SolrDocumentList all = solr.query(new SolrQuery("text_error:\"must be terminated\"")).getResults();
+		SolrDocumentList all = solr.query(new SolrQuery("text_error:\"must be terminated\" AND head:true")).getResults();
 		assertEquals("should index extraction errors", 1, all.getNumFound());
 	}
 
