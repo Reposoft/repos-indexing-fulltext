@@ -81,7 +81,7 @@ public class ItemFulltextIntegrationTest {
 		imp.run();
 		
 		QueryResponse all = solr.query(new SolrQuery("*:*"));
-		assertEquals("Should have indexed all v1 documents (31), folders (9) and revisions (2)", 31 + 9 + 2, all.getResults().getNumFound());
+		assertEquals("Should have indexed all v1 documents (31), folders (9), history (31+9) and commits (2)", 31 + 9 + (31+9) + 2, all.getResults().getNumFound());
 		
 		QueryResponse pdf = solr.query(new SolrQuery("pathext:pdf AND head:true"));
 		assertEquals(1, pdf.getResults().getNumFound());
