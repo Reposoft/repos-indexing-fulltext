@@ -68,7 +68,7 @@
 		<dependency>
 			<groupId>se.simonsoft</groupId>
 			<artifactId>cms-backend-filexml</artifactId>
-			<version>0.21.0</version>
+			<version>0.21.0-SNAPSHOT</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
