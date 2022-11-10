@@ -52,6 +52,12 @@
                     <groupId>org.apache.cxf</groupId>
                     <artifactId>cxf-rt-rs-client</artifactId>
                 </exclusion>
+                <!-- "The package org.w3c.dom is accessible from more than one module..." -->
+                <!-- https://stackoverflow.com/a/63456316-->
+                <exclusion>
+                	<groupId>xml-apis</groupId>
+                	<artifactId>xml-apis</artifactId>
+            	</exclusion>
             </exclusions>
 		</dependency>
 		<dependency>
