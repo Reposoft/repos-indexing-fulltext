@@ -6,6 +6,7 @@ package se.repos.indexing.fulltext;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.nio.charset.Charset;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -193,6 +194,7 @@ public class HandlerFulltext implements IndexingItemHandler {
 	private void addField(String prefix, String n, Metadata metadata, IndexingDoc indexingDoc) {
 		
 		String fieldname = prefix + n.replace(' ', '_').replace(':', '.');
+		String value;
 		if (n.indexOf(' ') >= 0) {
 			logger.trace("Whitespace in metadata name, '{}' becomes {}", n, fieldname);
 		}
@@ -204,9 +206,15 @@ public class HandlerFulltext implements IndexingItemHandler {
 			for (String v : metadata.getValues(n)) {
 				concat.append(METADATA_MULTIVALUE_SEPARATOR).append(v);
 			}
-			indexingDoc.addField(fieldname, concat.substring(1));
+			value = concat.substring(1);
 		} else {
-			indexingDoc.addField(fieldname, metadata.get(n));
+			value = metadata.get(n);
+		}
+		// #1840 SolR 8+ limits string fields to 32766 bytes (immense term)
+		if (value.getBytes(Charset.forName("UTF-8")).length <= 32000) {
+			indexingDoc.addField(fieldname, value);
+		} else {
+			logger.info("Tika metadata field '{}' suppressed, exceeds 32000 bytes: {}", n, indexingDoc.getFieldValue("id"));
 		}
 	}
 }
